@@ -10,11 +10,6 @@ namespace EPPlus.WebSampleMvc.NetCore.Controllers
 {
     public class SamplesController : Controller
     {
-        public SamplesController(IConfiguration configuration)
-        {
-
-        }
-
         public IActionResult Index()
         {
             return View();
