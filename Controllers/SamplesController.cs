@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EPPlus.WebSampleMvc.NetCore.Samples.Sample1;
+using EPPlus.WebSampleMvc.NetCore.Samples.Sample2;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using OfficeOpenXml;
@@ -15,26 +17,37 @@ namespace EPPlus.WebSampleMvc.NetCore.Controllers
             return View();
         }
 
+        private const string ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
         /// <summary>
         /// Simple example on how to create a workbook without
         /// access to the file system and return it as a file.
         /// </summary>
         /// <returns>A workbook as a file with filename and content type set</returns>
         [HttpGet]
-        public IActionResult GetWorkbook1()
+        public IActionResult WebSample1()
         {
             using(var package = new ExcelPackage())
             {
-                var sheet = package.Workbook.Worksheets.Add("Sheet 1");
-                sheet.Cells["A1:C1"].Merge = true;
-                sheet.Cells["A1"].Style.Font.Size = 18f;
-                sheet.Cells["A1"].Style.Font.Bold = true;
-                sheet.Cells["A1"].Value = "Simple example 1";
-
+                Sample1.InitWorkbook(package);
                 var excelData = package.GetAsByteArray();
-                var contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
                 var fileName = "MyWorkbook.xlsx";
-                return File(excelData, contentType, fileName);
+                return File(excelData, ContentType, fileName);
+            }
+        }
+
+        /// <summary>
+        /// This sample uses the LoadFromCollection method of EPPlus to load data into a worksheet.
+        /// </summary>
+        /// <returns>A workbook as a file with filename and content type set</returns>
+        /// <seealso cref="Sample2"/>
+        [HttpGet]
+        public IActionResult WebSample2()
+        {
+            using (var package = new ExcelPackage())
+            {
+                Sample2.InitWorkbook(package);
+                return File(package.GetAsByteArray(), ContentType, "Sample2.xlsx");
             }
         }
     }
