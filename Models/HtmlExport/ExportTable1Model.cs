@@ -21,14 +21,16 @@ namespace EPPlus.WebSampleMvc.NetCore.Models.HtmlExport
         private void InitDataTable()
         {
             _dataTable = new DataTable();
+            _dataTable.Columns.Add("Country", typeof(string));
             _dataTable.Columns.Add("FirstName", typeof(string));
             _dataTable.Columns.Add("LastName", typeof(string));
             _dataTable.Columns.Add("BirthDate", typeof(DateTime));
             _dataTable.Columns.Add("City", typeof(string));
+            
 
             for(var x = 0; x < 50; x++)
             {
-                _dataTable.Rows.Add(Faker.Name.First(), Faker.Name.Last(), Faker.Identification.DateOfBirth(), Faker.Address.City());
+                _dataTable.Rows.Add(Faker.Address.UkCountry(), Faker.Name.First(), Faker.Name.Last(), Faker.Identification.DateOfBirth(), Faker.Address.City());
             }
 
         }
@@ -40,6 +42,7 @@ namespace EPPlus.WebSampleMvc.NetCore.Models.HtmlExport
             {
                 var sheet = package.Workbook.Worksheets.Add("Html export sample 1");
                 var tableRange = sheet.Cells["A1"].LoadFromDataTable(_dataTable, true, style);
+                sheet.Cells["C2:C52"].Style.Numberformat.Format = "yyyy-MM-dd";
                 var table = sheet.Tables.GetFromRange(tableRange);
                 Css = table.HtmlExporter.GetCssString();
                 Html = table.HtmlExporter.GetHtmlString();

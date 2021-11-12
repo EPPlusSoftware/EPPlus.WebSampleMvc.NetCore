@@ -1,0 +1,133 @@
+﻿@model EPPlus.WebSampleMvc.NetCore.Models.HtmlExport.ExportTable2Model
+@{
+    ViewData["Title"] = "Html export";
+}
+<script type="text/javascript" src=https://www.gstatic.com/charts/loader.js></script>
+<style type="text/css">
+    @Html.Raw(Model.Css)
+</style>
+<div class="row">
+    <div class="col-12">
+        <div class="text-center">
+            <h1 class="display-4">Html export</h1>
+            <p>Html and CSS export of the built in tables/table styles in Excel</p>
+            <p>Use the dropdown above the table to change style</p>
+            <p>In this sample we have connected the exported table to Google charts with some simple javascript.</p>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col mb-3">
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                @ViewData["TableStyle"]
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="/HtmlExport/ExportTable2?style=Dark1">Dark 1</a>
+                <a class="dropdown-item" href="/HtmlExport/ExportTable2?style=Dark2">Dark 2</a>
+                <a class="dropdown-item" href="/HtmlExport/ExportTable2?style=Dark3">Dark 3</a>
+                <a class="dropdown-item" href="/HtmlExport/ExportTable2?style=Dark4">Dark 4</a>
+                <a class="dropdown-item" href="/HtmlExport/ExportTable2?style=Medium1">Medium 1</a>
+                <a class="dropdown-item" href="/HtmlExport/ExportTable2?style=Medium2">Medium 2</a>
+                <a class="dropdown-item" href="/HtmlExport/ExportTable21?style=Medium3">Medium 3</a>
+                <a class="dropdown-item" href="/HtmlExport/ExportTable2?style=Medium4">Medium 4</a>
+                <a class="dropdown-item" href="/HtmlExport/ExportTable2?style=Light1">Light 1</a>
+                <a class="dropdown-item" href="/HtmlExport/ExportTable2?style=Light2">Light 2</a>
+                <a class="dropdown-item" href="/HtmlExport/ExportTable2?style=Light3">Light 3</a>
+                <a class="dropdown-item" href="/HtmlExport/ExportTable2?style=Light4">Light 4</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12 col-md-4">
+        @Html.Raw(Model.Html)
+    </div>
+    <div class="col-sm-12 col-md-7">
+        <div class="row">
+            <div class="col">
+                <div id="geo-chart"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div id="pie-chart"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div id="bar-chart"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    // Load the Visualization API and the corechart package.
+    google.charts.load('current', { 'packages': ['corechart', 'geochart'] });
+
+    // Set a callback to run when the Google Visualization API is loaded.
+    google.charts.setOnLoadCallback(drawChart);
+
+    // Callback that creates and populates a data table,
+    // instantiates the pie chart, passes in the data and
+    // draws it.
+    function drawChart() {
+
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+        var dataTypes = [];
+        $(".epplus-table thead tr th").each(function (i, elem) {
+            var dt = $(elem).attr("data-datatype");
+            if (dt == "dateTime") {
+                dt = "datetime";
+            }
+            dataTypes[i] = dt;
+            data.addColumn(dt, elem.innerHTML);
+            
+        });
+        let rows = [];
+        $(".epplus-table tbody tr").each(function (i, elem) {
+            var row = []
+            var cells = $(elem).children().each(function (i, cell) {
+                var dataType = dataTypes[i];
+                if (dataType == "string") {
+                    row.push(cell.innerHTML);
+                }
+                else if (dataType == "number") {
+                    row.push(parseFloat(cell.innerHTML));
+                }
+                else if (dataType == "datetime") {
+                    console.log(cell.innerHTML);
+                    let dateParts = cell.innerHTML.split("-");
+                    let dateS = new Date(+dateParts[0], +dateParts[1], +dateParts[2]);
+                    console.log(dateS.getFullYear());
+                    row.push(dateS);
+                }
+                
+            });
+            rows.push(row);
+        });
+        data.addRows(rows);
+
+        // Set chart options
+        var options = {
+            'title': 'Population in some countries',
+            'width': 500,
+            'height': 300,
+            'is3D': true
+        };
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.PieChart(document.getElementById('pie-chart'));
+        chart.draw(data, options);
+
+        var chart2 = new google.visualization.BarChart(document.getElementById('bar-chart'));
+        chart2.draw(data, options);
+
+        var chart3 = new google.visualization.GeoChart(document.getElementById('geo-chart'));
+        options.region = 150;
+        chart3.draw(data, options);
+    }
+</script>
+
