@@ -1,0 +1,44 @@
+﻿@model EPPlus.WebSampleMvc.NetCore.Models.HtmlExport.ExportTable1Model
+@{
+    ViewData["Title"] = "Html export";
+}
+<style type="text/css">
+    @Html.Raw(Model.Css)
+</style>
+<div class="row">
+    <div class="col-12">
+        <div class="text-center">
+            <h1 class="display-4">Html export</h1>
+            <p>Html and CSS export of the built in tables/table styles in Excel</p>
+            <p>Use the dropdown above the table to change style</p>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col mb-3">
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                @ViewData["TableStyle"]
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="/HtmlExport/ExportTable1?style=Dark1">Dark 1</a>
+                <a class="dropdown-item" href="/HtmlExport/ExportTable1?style=Dark2">Dark 2</a>
+                <a class="dropdown-item" href="/HtmlExport/ExportTable1?style=Dark3">Dark 3</a>
+                <a class="dropdown-item" href="/HtmlExport/ExportTable1?style=Dark4">Dark 4</a>
+                <a class="dropdown-item" href="/HtmlExport/ExportTable1?style=Medium1">Medium 1</a>
+                <a class="dropdown-item" href="/HtmlExport/ExportTable1?style=Medium2">Medium 2</a>
+                <a class="dropdown-item" href="/HtmlExport/ExportTable1?style=Medium3">Medium 3</a>
+                <a class="dropdown-item" href="/HtmlExport/ExportTable1?style=Medium4">Medium 4</a>
+                <a class="dropdown-item" href="/HtmlExport/ExportTable1?style=Light1">Light 1</a>
+                <a class="dropdown-item" href="/HtmlExport/ExportTable1?style=Light2">Light 2</a>
+                <a class="dropdown-item" href="/HtmlExport/ExportTable1?style=Light3">Light 3</a>
+                <a class="dropdown-item" href="/HtmlExport/ExportTable1?style=Light4">Light 4</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        @Html.Raw(Model.Html)
+    </div>
+</div>
