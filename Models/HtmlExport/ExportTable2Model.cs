@@ -72,8 +72,17 @@ namespace EPPlus.WebSampleMvc.NetCore.Models.HtmlExport
             {
                 var sheet = package.Workbook.Worksheets.Add("Html export sample 2");
                 var tableRange = sheet.Cells["A1"].LoadFromDataTable(_dataTable, true, style);
+                
+                // sort the table range
                 tableRange.Sort(x => x.SortBy.Column(1, eSortOrder.Descending));
+                
+                // configure the table
                 var table = sheet.Tables.GetFromRange(tableRange);
+                table.ShowTotal = true;
+                table.Columns[1].TotalsRowFunction = RowFunctions.Sum;
+                sheet.Calculate();
+
+                // export css and html
                 Css = table.HtmlExporter.GetCssString();
                 Html = table.HtmlExporter.GetHtmlString();
             }
