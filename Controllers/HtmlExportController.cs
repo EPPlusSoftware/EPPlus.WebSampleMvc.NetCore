@@ -15,15 +15,24 @@ namespace EPPlus.WebSampleMvc.NetCore.Controllers
             return View();
         }
 
-        public IActionResult ExportTable1(string style)
+        [HttpGet]
+        public IActionResult ExportTable1()
         {
-            if(!Enum.TryParse(style, out TableStyles ts))
+            var model = new ExportTable1Model();
+            model.SetupSampleData(0);
+            model.TableStyle = "Dark1";
+            return View(model);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public IActionResult ExportTable1(ExportTable1Model model)
+        {
+            if(!Enum.TryParse(model.TableStyle, out TableStyles ts))
             {
                 ts = TableStyles.Dark1;
             }
             ViewData["TableStyle"] = ts.ToString();
-            var model = new ExportTable1Model();
-            model.SetupSampleData(ts);
+            model.SetupSampleData(model.Theme, ts);
             return View(model);
         }
 

@@ -1,44 +1,176 @@
 ﻿@model EPPlus.WebSampleMvc.NetCore.Models.HtmlExport.ExportTable1Model
 @{
     ViewData["Title"] = "Html export";
+    Layout = "_Layout";
 }
 <style type="text/css">
     @Html.Raw(Model.Css)
 </style>
 <div class="row">
-    <div class="col-12">
-        <div class="text-center">
-            <h1 class="display-4">Html export</h1>
-            <p>Html and CSS export of the built in tables/table styles in Excel</p>
-            <p>Use the dropdown above the table to change style</p>
-        </div>
+    <div class="col">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item"><a href="/HtmlExport">Html export</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Export table 1</li>
+            </ol>
+        </nav>
     </div>
 </div>
 <div class="row">
-    <div class="col mb-3">
-        <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                @ViewData["TableStyle"]
-            </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="/HtmlExport/ExportTable1?style=Dark1">Dark 1</a>
-                <a class="dropdown-item" href="/HtmlExport/ExportTable1?style=Dark2">Dark 2</a>
-                <a class="dropdown-item" href="/HtmlExport/ExportTable1?style=Dark3">Dark 3</a>
-                <a class="dropdown-item" href="/HtmlExport/ExportTable1?style=Dark4">Dark 4</a>
-                <a class="dropdown-item" href="/HtmlExport/ExportTable1?style=Medium1">Medium 1</a>
-                <a class="dropdown-item" href="/HtmlExport/ExportTable1?style=Medium2">Medium 2</a>
-                <a class="dropdown-item" href="/HtmlExport/ExportTable1?style=Medium3">Medium 3</a>
-                <a class="dropdown-item" href="/HtmlExport/ExportTable1?style=Medium4">Medium 4</a>
-                <a class="dropdown-item" href="/HtmlExport/ExportTable1?style=Light1">Light 1</a>
-                <a class="dropdown-item" href="/HtmlExport/ExportTable1?style=Light2">Light 2</a>
-                <a class="dropdown-item" href="/HtmlExport/ExportTable1?style=Light3">Light 3</a>
-                <a class="dropdown-item" href="/HtmlExport/ExportTable1?style=Light4">Light 4</a>
+    <div class="col text-center">
+        <h1 class="display-4">Html export</h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12 col-md-5 bg-light p-3 m-2">
+        <p>Html and CSS export of the built in tables/table styles in Excel</p>
+        <p>Use the dropdowns to change table style and theme, then click the Reload button. This is the only roundtrip done back to EPPlus. Change the appearance of the table by checking/unchecking the checkboxes (this is done by adding removing css-classes from the table and, for DataTables.js, javascript).</p>
+    </div>
+    <div class="col-sm-12 col-md-5 bg-light p-3 m-2">
+        <p>All CSS classes needed to style the table is exported from EPPlus and based on Excels table styles and themes. You can use the dev tools of your favorite browser to see how the classes are applied to the table.</p>
+    </div>
+</div>
+<form asp-action="ExportTable1" method="post">
+    <div class="row">
+        <div class="col-sm-12 col-md-5 m-2 p-3 border border-secondary rounded shadow">
+
+            @Html.AntiForgeryToken()
+            <div class="form-group">
+                <label>Theme</label>
+                @Html.DropDownListFor(x => x.Theme, Model.AllThemes, new { @class = "form-control" })
+            </div>
+            <div class="form-group">
+                <label>Table style</label>
+                @Html.DropDownListFor(x => x.TableStyle, Model.AllBuiltInTableStyles, new { @class = "form-control" })
+            </div>
+            <div class="form-check">
+                @Html.CheckBoxFor(x => x.ShowFirstColumn, new { @class = "form-control-check", id = "chkShowFirstColumn" })
+                <label class="form-check-label">Show first column</label>
+            </div>
+            <div class="form-check">
+                @Html.CheckBoxFor(x => x.ShowLastColumn, new { @class = "form-control-check", id = "chkShowLastColumn" })
+                <label class="form-check-label">Show last column</label>
+            </div>
+            <div class="form-check">
+                @Html.CheckBoxFor(x => x.ShowColumnStripes, new { @class = "form-control-check", id = "chkShowColumnStripes" })
+                <label class="form-check-label">Show column stripes</label>
+            </div>
+            <div class="form-check">
+                @Html.CheckBoxFor(x => x.ShowRowsStripes, new { @class = "form-control-check", id = "chkShowRowStripes" })
+                <label class="form-check-label">Show row stripes</label>
+            </div>
+            <div class="form-group mt-2">
+                <button type="submit" class="btn btn-primary">Reload</button>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-5 m-2 ml-md-3 p-3 border border-secondary rounded shadow">
+            <p>The checkboxes below demonstrates that you can use the css from EPPlus with css from other frameworks</p>
+            <div class="form-check">
+                @Html.CheckBoxFor(x => x.AddBootstrapClasses, new { @class = "form-control-check", id = "chkAddBootstrapClasses" })
+                <label class="form-check-label">Add Bootstrap 4 table classes</label>
+            </div>
+            <div class="form-check">
+                @Html.CheckBoxFor(x => x.AddDataTablesJs, new { @class = "form-control-check", id = "chkAddDataTablesJs" })
+                <label class="form-check-label">Add DataTables.js</label>
             </div>
         </div>
     </div>
-</div>
-<div class="row">
-    <div class="col">
-        @Html.Raw(Model.Html)
+    <div class="row mt-3">
+        <div class="col" id="colTable">
+            @Html.Raw(Model.Html)
+        </div>
     </div>
-</div>
+</form>
+<script type_="text/javascript">
+    document.addEventListener("DOMContentLoaded", function () {
+
+        var table = document.getElementsByClassName("epplus-table")[0];
+
+        var firstColCheckbox = document.getElementById('chkShowFirstColumn');
+        var firstColumnClass = "epplus-tablestyle-@Model.TableStyle?.ToLower()-first-column";
+        firstColCheckbox.addEventListener("change", function () {
+            if (firstColCheckbox.checked) {
+                table.classList.add(firstColumnClass);
+            } else {
+                table.classList.remove(firstColumnClass);
+            }
+        }, false);
+
+        var lastColCheckbox = document.getElementById('chkShowLastColumn');
+        var lastColumnClass = "epplus-tablestyle-@Model.TableStyle?.ToLower()-last-column";
+        lastColCheckbox.addEventListener("change", function () {
+            if (lastColCheckbox.checked) {
+                table.classList.add(lastColumnClass);
+            } else {
+                table.classList.remove(lastColumnClass);
+            }
+        }, false);
+
+        var colStripesCheckbox = document.getElementById('chkShowColumnStripes');
+        var colStripesClass = "epplus-tablestyle-@Model.TableStyle?.ToLower()-column-stripes";
+        colStripesCheckbox.addEventListener("change", function () {
+            if (colStripesCheckbox.checked) {
+                table.classList.add(colStripesClass);
+            } else {
+                table.classList.remove(colStripesClass);
+            }
+        }, false);
+
+        var rowStripesCheckbox = document.getElementById('chkShowRowStripes');
+        var rowStripesClass = "epplus-tablestyle-@Model.TableStyle?.ToLower()-row-stripes";
+        rowStripesCheckbox.addEventListener("change", function () {
+            if (rowStripesCheckbox.checked) {
+                table.classList.add(rowStripesClass);
+            } else {
+                table.classList.remove(rowStripesClass);
+            }
+        }, false);
+
+        var addBootstrapClassesCheckbox = document.getElementById("chkAddBootstrapClasses");
+        addBootstrapClassesCheckbox.addEventListener("change", function () {
+            if (addBootstrapClassesCheckbox.checked) {
+                document.getElementById("colTable").classList.add("table-responsive");
+                table.classList.add("table");
+                table.classList.add("table-borderless");
+            }
+            else {
+                document.getElementById("colTable").classList.remove("table-responsive");
+                table.classList.remove("table");
+                table.classList.remove("table-borderless");
+            }
+        }, false);
+
+        var addDataTablesJsCheckbox = document.getElementById("chkAddDataTablesJs");
+        addDataTablesJsCheckbox.addEventListener("change", function () {
+            if (addDataTablesJsCheckbox.checked) {
+                // data tables requires jquery
+                jQuery('.epplus-table').first().DataTable();
+            }
+            else {
+                jQuery('.epplus-table').first().DataTable().destroy();
+            }
+        }, false);
+
+        jQuery.noConflict();
+    });
+</script>
+@if (Model.AddBootstrapClasses)
+{
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function () {
+            var table = document.getElementsByClassName("epplus-table")[0];
+            document.getElementById("colTable").classList.add("table-responsive");
+            table.classList.add("table");
+        });
+    </script>
+}
+@if (Model.AddDataTablesJs)
+{
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function () {
+            jQuery.noConflict();
+            jQuery('.epplus-table').first().DataTable();
+        });
+    </script>
+}

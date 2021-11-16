@@ -7,6 +7,17 @@
     @Html.Raw(Model.Css)
 </style>
 <div class="row">
+    <div class="col">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item"><a href="/HtmlExport">Html export</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Export table with charts</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+<div class="row">
     <div class="col-12">
         <div class="text-center">
             <h1 class="display-4">Html export</h1>
@@ -100,7 +111,7 @@
                     row.push(cell.innerHTML);
                 }
                 else if (dataType == "number") {
-                    row.push(parseFloat(cell.innerHTML));
+                    row.push(parseFloat($(cell).data("value")));
                 }
                 else if (dataType == "datetime") {
                     console.log(cell.innerHTML);

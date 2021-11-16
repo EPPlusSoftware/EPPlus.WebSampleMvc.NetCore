@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Faker;
 using OfficeOpenXml;
+using OfficeOpenXml.Style;
 using OfficeOpenXml.Table;
 
 namespace EPPlus.WebSampleMvc.NetCore.Models.HtmlExport
@@ -72,7 +73,6 @@ namespace EPPlus.WebSampleMvc.NetCore.Models.HtmlExport
             {
                 var sheet = package.Workbook.Worksheets.Add("Html export sample 2");
                 var tableRange = sheet.Cells["A1"].LoadFromDataTable(_dataTable, true, style);
-                
                 // sort the table range
                 tableRange.Sort(x => x.SortBy.Column(1, eSortOrder.Descending));
                 
@@ -81,6 +81,9 @@ namespace EPPlus.WebSampleMvc.NetCore.Models.HtmlExport
                 table.ShowTotal = true;
                 table.Columns[1].TotalsRowFunction = RowFunctions.Sum;
                 sheet.Calculate();
+
+                sheet.Cells[tableRange.Start.Row, 1, tableRange.End.Row, 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                sheet.Cells[tableRange.Start.Row, 2, tableRange.End.Row, 2].Style.Numberformat.Format = "#,##0";
 
                 // export css and html
                 Css = table.HtmlExporter.GetCssString();
