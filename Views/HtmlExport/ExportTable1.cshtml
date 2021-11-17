@@ -22,7 +22,7 @@
         <h1 class="display-4">Html export</h1>
     </div>
 </div>
-<div class="row">
+<div class="row justify-content-center">
     <div class="col-sm-12 col-md-5 bg-light p-3 m-2">
         <p>Html and CSS export of the built in tables/table styles in Excel</p>
         <p>Use the dropdowns to change table style and theme, then click the Reload button. This is the only roundtrip done back to EPPlus. Change the appearance of the table by checking/unchecking the checkboxes (this is done by adding removing css-classes from the table and, for DataTables.js, javascript).</p>
@@ -32,7 +32,7 @@
     </div>
 </div>
 <form asp-action="ExportTable1" method="post">
-    <div class="row">
+    <div class="row justify-content-center">
         <div class="col-sm-12 col-md-5 m-2 p-3 border border-secondary rounded shadow">
 
             @Html.AntiForgeryToken()
@@ -76,6 +76,14 @@
             </div>
         </div>
     </div>
+    <hr />
+    <div class="row">
+        <div class="col">
+            <label>Css classes on the table element</label>
+            <p class="bg-light p-2 rounded" style="font-family: Courier New, Courier, monospace" id="table-class-info"></p>
+        </div>
+    </div>
+    <hr />
     <div class="row mt-3">
         <div class="col" id="colTable">
             @Html.Raw(Model.Html)
@@ -83,10 +91,27 @@
     </div>
 </form>
 <script type_="text/javascript">
+    /*
+     * Updates the p element that displays the classes currently applied to the table.
+     */ 
+    function updateTableClassInfo() {
+        let classes = document.getElementsByClassName("epplus-table")[0].className;
+        document.getElementById("table-class-info").innerHTML = classes;
+    }
+    /*
+    * Removes some attributes that DataTable.js has set on the table and don't remove at destroy().
+    */
+    function postDestroyDataTable() {
+        jQuery(".epplus-table thead tr th").each(function (i, elem) {
+            jQuery(".epplus-table").removeClass("no-footer");
+            jQuery(elem).removeAttr("style").removeAttr("class").removeAttr("tabindex").removeAttr("aria-controls").removeAttr("aria-sort").removeAttr("aria-label").removeAttr("colspan").removeAttr("rowspan").removeAttr("tabindex");
+        });
+    }
     document.addEventListener("DOMContentLoaded", function () {
 
         var table = document.getElementsByClassName("epplus-table")[0];
 
+        // checkbox handler for show first column
         var firstColCheckbox = document.getElementById('chkShowFirstColumn');
         var firstColumnClass = "epplus-tablestyle-@Model.TableStyle?.ToLower()-first-column";
         firstColCheckbox.addEventListener("change", function () {
@@ -95,8 +120,10 @@
             } else {
                 table.classList.remove(firstColumnClass);
             }
+            updateTableClassInfo();
         }, false);
 
+        // checkbox handler for show last column
         var lastColCheckbox = document.getElementById('chkShowLastColumn');
         var lastColumnClass = "epplus-tablestyle-@Model.TableStyle?.ToLower()-last-column";
         lastColCheckbox.addEventListener("change", function () {
@@ -105,8 +132,10 @@
             } else {
                 table.classList.remove(lastColumnClass);
             }
+            updateTableClassInfo();
         }, false);
 
+        // checkbox handler for show column stripes
         var colStripesCheckbox = document.getElementById('chkShowColumnStripes');
         var colStripesClass = "epplus-tablestyle-@Model.TableStyle?.ToLower()-column-stripes";
         colStripesCheckbox.addEventListener("change", function () {
@@ -115,8 +144,10 @@
             } else {
                 table.classList.remove(colStripesClass);
             }
+            updateTableClassInfo();
         }, false);
 
+        // checkbox handler for show row stripes
         var rowStripesCheckbox = document.getElementById('chkShowRowStripes');
         var rowStripesClass = "epplus-tablestyle-@Model.TableStyle?.ToLower()-row-stripes";
         rowStripesCheckbox.addEventListener("change", function () {
@@ -125,8 +156,10 @@
             } else {
                 table.classList.remove(rowStripesClass);
             }
+            updateTableClassInfo();
         }, false);
 
+        // checkbox handler for adding/removing bootstrap classes
         var addBootstrapClassesCheckbox = document.getElementById("chkAddBootstrapClasses");
         addBootstrapClassesCheckbox.addEventListener("change", function () {
             if (addBootstrapClassesCheckbox.checked) {
@@ -139,8 +172,10 @@
                 table.classList.remove("table");
                 table.classList.remove("table-borderless");
             }
+            updateTableClassInfo();
         }, false);
 
+        // checkbox handler for adding/removing DataTables.js
         var addDataTablesJsCheckbox = document.getElementById("chkAddDataTablesJs");
         addDataTablesJsCheckbox.addEventListener("change", function () {
             if (addDataTablesJsCheckbox.checked) {
@@ -149,10 +184,14 @@
             }
             else {
                 jQuery('.epplus-table').first().DataTable().destroy();
+                // datatables.js leaves this class after destroy(), so removing it this way
+                postDestroyDataTable();
             }
+            updateTableClassInfo();
         }, false);
 
         jQuery.noConflict();
+        updateTableClassInfo();
     });
 </script>
 @if (Model.AddBootstrapClasses)
@@ -162,6 +201,8 @@
             var table = document.getElementsByClassName("epplus-table")[0];
             document.getElementById("colTable").classList.add("table-responsive");
             table.classList.add("table");
+            table.classList.add("table-borderless");
+            updateTableClassInfo();
         });
     </script>
 }
@@ -171,6 +212,7 @@
         document.addEventListener("DOMContentLoaded", function () {
             jQuery.noConflict();
             jQuery('.epplus-table').first().DataTable();
+            updateTableClassInfo();
         });
     </script>
 }
