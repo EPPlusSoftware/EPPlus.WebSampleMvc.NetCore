@@ -24,7 +24,7 @@
 </div>
 <div class="row justify-content-center">
     <div class="col-sm-12 col-md-5 bg-light p-3 m-2">
-        <p>Html and CSS export of the built in tables/table styles in Excel</p>
+        <p>Html and CSS export of the tables/built in table styles in Excel</p>
         <p>Use the dropdowns to change table style and theme, then click the Reload button. This is the only roundtrip done back to EPPlus. Change the appearance of the table by checking/unchecking the checkboxes (this is done by adding removing css-classes from the table and, for DataTables.js, javascript).</p>
     </div>
     <div class="col-sm-12 col-md-5 bg-light p-3 m-2">
@@ -65,7 +65,7 @@
             </div>
         </div>
         <div class="col-sm-12 col-md-5 m-2 ml-md-3 p-3 border border-secondary rounded shadow">
-            <p>The checkboxes below demonstrates that you can use the css from EPPlus with css from other frameworks</p>
+            <p>The checkboxes below demonstrates that you can use the css from EPPlus with css/javascript from other frameworks</p>
             <div class="form-check">
                 @Html.CheckBoxFor(x => x.AddBootstrapClasses, new { @class = "form-control-check", id = "chkAddBootstrapClasses" })
                 <label class="form-check-label">Add Bootstrap 4 table classes</label>
@@ -113,7 +113,7 @@
 
         // checkbox handler for show first column
         var firstColCheckbox = document.getElementById('chkShowFirstColumn');
-        var firstColumnClass = "epplus-tablestyle-@Model.TableStyle?.ToLower()-first-column";
+        var firstColumnClass = "ts-@Model.TableStyle?.ToLower()-first-column";
         firstColCheckbox.addEventListener("change", function () {
             if (firstColCheckbox.checked) {
                 table.classList.add(firstColumnClass);
@@ -125,7 +125,7 @@
 
         // checkbox handler for show last column
         var lastColCheckbox = document.getElementById('chkShowLastColumn');
-        var lastColumnClass = "epplus-tablestyle-@Model.TableStyle?.ToLower()-last-column";
+        var lastColumnClass = "ts-@Model.TableStyle?.ToLower()-last-column";
         lastColCheckbox.addEventListener("change", function () {
             if (lastColCheckbox.checked) {
                 table.classList.add(lastColumnClass);
@@ -137,7 +137,7 @@
 
         // checkbox handler for show column stripes
         var colStripesCheckbox = document.getElementById('chkShowColumnStripes');
-        var colStripesClass = "epplus-tablestyle-@Model.TableStyle?.ToLower()-column-stripes";
+        var colStripesClass = "ts-@Model.TableStyle?.ToLower()-column-stripes";
         colStripesCheckbox.addEventListener("change", function () {
             if (colStripesCheckbox.checked) {
                 table.classList.add(colStripesClass);
@@ -149,7 +149,7 @@
 
         // checkbox handler for show row stripes
         var rowStripesCheckbox = document.getElementById('chkShowRowStripes');
-        var rowStripesClass = "epplus-tablestyle-@Model.TableStyle?.ToLower()-row-stripes";
+        var rowStripesClass = "ts-@Model.TableStyle?.ToLower()-row-stripes";
         rowStripesCheckbox.addEventListener("change", function () {
             if (rowStripesCheckbox.checked) {
                 table.classList.add(rowStripesClass);

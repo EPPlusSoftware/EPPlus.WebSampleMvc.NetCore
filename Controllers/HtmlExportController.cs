@@ -47,5 +47,16 @@ namespace EPPlus.WebSampleMvc.NetCore.Controllers
             model.SetupSampleData(ts);
             return View(model);
         }
+
+        public IActionResult ExportTable3(string style)
+        {
+            if (!Enum.TryParse(style, out TableStyles ts))
+            {
+                ts = TableStyles.Dark1;
+            }
+            var model = new ExportTable3Model();
+            model.SetupSampleData(ts);
+            return View(model);
+        }
     }
 }

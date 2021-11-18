@@ -65,6 +65,8 @@ namespace EPPlus.WebSampleMvc.NetCore.Models.HtmlExport
             _dataTable.Rows.Add("Cyrprus", 1189265, 9251);
             _dataTable.Rows.Add("Kosovo", 1798506, 10908);
             _dataTable.Rows.Add("Slovenia", 2055496, 20273);
+            _dataTable.Rows.Add("Moldova", 4033963, 33846);
+            _dataTable.Rows.Add("North Macedonia", 2083374, 25713);
 
         }
 
