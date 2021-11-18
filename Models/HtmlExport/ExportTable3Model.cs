@@ -17,7 +17,7 @@ namespace EPPlus.WebSampleMvc.NetCore.Models.HtmlExport
             using (var package = new ExcelPackage())
             {
                 var sheet = package.Workbook.Worksheets.Add("Html export sample 2");
-                var csvFileInfo = new FileInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"data\\currencies.csv"));
+                var csvFileInfo = new FileInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"data\\currencies2020.csv"));
                 var format = new ExcelTextFormat
                 {
                     Delimiter = ';',
@@ -33,9 +33,12 @@ namespace EPPlus.WebSampleMvc.NetCore.Models.HtmlExport
                 var table = sheet.Tables.GetFromRange(tableRange);
                 // export css and html
                 Css = table.HtmlExporter.GetCssString();
-                var o = HtmlTableExportOptions.Create();
-                o.Culture = CultureInfo.InvariantCulture;
-                Html = table.HtmlExporter.GetHtmlString(o);
+                Html = table.HtmlExporter.GetHtmlString(o => 
+                    {
+                        o.Culture = CultureInfo.InvariantCulture;
+                        o.TableId = "currency-table";
+                        o.AdditionalTableClassNames.Add("table");
+                    });
             }
         }
 

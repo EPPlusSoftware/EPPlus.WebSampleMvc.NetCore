@@ -113,4 +113,11 @@
         var chart = new google.visualization.LineChart(document.getElementById('currency-chart'));
         chart.draw(data, options);
     }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        let table = document.getElementsByClassName("epplus-table")[0];
+        table.classList.add("table");
+        table.classList.add("table-sm");
+        table.classList.add("table-borderless");
+    });
 </script>

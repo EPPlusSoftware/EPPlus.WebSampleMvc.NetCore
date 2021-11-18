@@ -29,7 +29,7 @@ namespace EPPlus.WebSampleMvc.NetCore.Controllers
         {
             if(!Enum.TryParse(model.TableStyle, out TableStyles ts))
             {
-                ts = TableStyles.Dark1;
+                ts = TableStyles.Light1;
             }
             ViewData["TableStyle"] = ts.ToString();
             model.SetupSampleData(model.Theme, ts);
