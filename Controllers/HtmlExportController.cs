@@ -15,6 +15,8 @@ namespace EPPlus.WebSampleMvc.NetCore.Controllers
             return View();
         }
 
+        private const string ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
         [HttpGet]
         public IActionResult ExportTable1()
         {
@@ -33,6 +35,10 @@ namespace EPPlus.WebSampleMvc.NetCore.Controllers
             }
             ViewData["TableStyle"] = ts.ToString();
             model.SetupSampleData(model.Theme, ts);
+            if(model.GetWorkbook)
+            {
+                return File(model.WorkbookBytes, ContentType, "MyWorkbook.xlsx");
+            }
             return View(model);
         }
 
@@ -52,7 +58,7 @@ namespace EPPlus.WebSampleMvc.NetCore.Controllers
         {
             if (!Enum.TryParse(style, out TableStyles ts))
             {
-                ts = TableStyles.Dark1;
+                ts = TableStyles.Light2;
             }
             var model = new ExportTable3Model();
             model.SetupSampleData(ts);

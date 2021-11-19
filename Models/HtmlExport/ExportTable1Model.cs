@@ -67,6 +67,7 @@ namespace EPPlus.WebSampleMvc.NetCore.Models.HtmlExport
                 var sheet = package.Workbook.Worksheets.Add("Html export sample 1");
                 var tableRange = sheet.Cells["A1"].LoadFromDataTable(_dataTable, true, style);
                 sheet.Cells["D2:D52"].Style.Numberformat.Format = "yyyy-MM-dd";
+                tableRange.AutoFitColumns();
                 
                 var table = sheet.Tables.GetFromRange(tableRange);
                 
@@ -78,6 +79,7 @@ namespace EPPlus.WebSampleMvc.NetCore.Models.HtmlExport
 
                 Css = table.HtmlExporter.GetCssString();
                 Html = table.HtmlExporter.GetHtmlString();
+                WorkbookBytes = package.GetAsByteArray();
             }
         }
 
@@ -122,9 +124,13 @@ namespace EPPlus.WebSampleMvc.NetCore.Models.HtmlExport
 
         public bool AddDataTablesJs { get; set; }
 
+        public bool GetWorkbook { get; set; }
+
         public string Css { get; set; }
 
         public string Html { get; set; }
+
+        public byte[] WorkbookBytes { get; set; }
 
 
     }
