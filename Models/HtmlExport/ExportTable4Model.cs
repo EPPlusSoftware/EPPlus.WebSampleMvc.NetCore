@@ -11,13 +11,13 @@ using System.Threading.Tasks;
 
 namespace EPPlus.WebSampleMvc.NetCore.Models.HtmlExport
 {
-    public class ExportTable3Model
+    public class ExportTable4Model
     {
         public void SetupSampleData(TableStyles style = TableStyles.Dark1)
         {
             using (var package = new ExcelPackage())
             {
-                var sheet = package.Workbook.Worksheets.Add("Html export sample 3");
+                var sheet = package.Workbook.Worksheets.Add("Html export sample 4");
                 var csvFileInfo = new FileInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"data\\currencies2011weekly.csv"));
                 var format = new ExcelTextFormat
                 {

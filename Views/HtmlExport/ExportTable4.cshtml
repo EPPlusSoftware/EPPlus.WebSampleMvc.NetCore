@@ -1,0 +1,136 @@
+﻿@model EPPlus.WebSampleMvc.NetCore.Models.HtmlExport.ExportTable4Model
+@{
+    ViewData["Title"] = "Html export";
+}
+<script type="text/javascript" src=https://www.gstatic.com/charts/loader.js></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.6.0/chart.min.js"></script>
+<style type="text/css">
+    @Html.Raw(Model.Css)
+</style>
+<div class="row">
+    <div class="col">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item"><a href="/HtmlExport">Html export</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Export currency table with line chart</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+<div class="row">
+    <div class="col text-center">
+        <h4>Html export - Chart.js line chart</h4>
+    </div>
+</div>
+<div class="row my-2">
+    <div class="col bg-light rounded">
+        <div class="row">
+            <div class="col-6">
+                <a href="/HtmlExport/ExportTable3">&laquo; Previous sample</a>
+            </div>
+            <div class="col-6 text-right">
+                <a href="#" class="text-secondary">Next sample &raquo;</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <p>This table contains over 2 000 currency rates and is connected to a <a href="https://www.chartjs.org/" target="_blank">Charts.js</a> line chart. The rates are imported to EPPlus from a .csv file using the <a href="https://github.com/EPPlusSoftware/EPPlus/wiki/LoadFromText" target="_blank">LoadFromText</a> function and exported to css/html using table style Light2.</p>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        <canvas id="myChart"></canvas>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        @Html.Raw(Model.Html)
+    </div>
+</div>
+<script type="text/javascript">
+
+function getValue(cell, datatype) {
+            console.log("cell: " + cell.innerHTML + ", dt: " + datatype);
+            if (datatype == "string") {
+                return cell.innerHTML;
+            }
+            else if (datatype == "number") {
+                return parseFloat(cell.getAttribute("data-value"));
+            }
+            else if (datatype == "datetime") {
+                return new Date(parseInt(cell.getAttribute("data-value")));
+            }
+        }
+
+// Reads data from the table and creates input for a Chart.js line chart.
+// The argument xCol should be the 0-based index of the table column that contains the labels of the x-axis.
+// The argument indexes should be an array containing the 0 - based indexes of the table
+// columns to use in the datasets.
+function getArraysFromTable(xCol, indexes) {
+            var xDataType;
+            var dataTypes = [];
+            var colors = ['black', 'blue', 'red', 'orange', 'green']
+            var data = {
+                labels: [],
+                datasets: []
+            };
+
+            // read data from the header section
+            var headers = document.querySelectorAll("table.epplus-table thead tr th");
+            for (var hIx = 0; hIx < headers.length; hIx++) {
+                let hCell = headers[hIx];
+                if (indexes.indexOf(hIx) > -1) {
+                    dataTypes.push(hCell.getAttribute("data-datatype"));
+                    data.datasets.push({
+                        label: hCell.innerHTML,
+                        data: [],
+                        borderColor: colors[hIx],
+                        backgroundColor: colors[hIx],
+                        borderWidth: 1,
+                        fill: false
+                    });
+                }
+                else if (hIx == xCol) {
+                    xDataType = hCell.getAttribute("data-datatype");
+                }
+            }
+
+            // read data from the table's body
+            var tableRows = document.querySelectorAll("table.epplus-table tbody tr");
+            for (var rIx = 0; rIx < tableRows.length; rIx++) {
+                let tableRow = tableRows[rIx];
+                let xVal = getValue(tableRow.children[xCol], xDataType);
+                data.labels.push(tableRow.children[xCol].innerHTML);
+                for (var iIx = 0; iIx < indexes.length; iIx++) {
+                    let ix = indexes[iIx];
+                    let dataType = dataTypes[iIx];
+                    let val = getValue(tableRow.children[ix], dataType);
+                    data.datasets[iIx].data.push({ x: xVal, y: val });
+                }
+            }
+            // reverse the data to get it from past to present
+            for (var i = 0; i < data.datasets.length; i++) {
+                data.datasets[i].data.reverse();
+            }
+            data.labels.reverse();
+
+            return data;
+        }
+
+const config = {
+        type: 'line',
+        data: getArraysFromTable(0, [1, 2, 3, 4]),
+        options: {
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Historial currency rates in USD'
+                }
+            }
+        }
+    };
+    const myChart = new Chart(document.getElementById("myChart"), config);
+</script>

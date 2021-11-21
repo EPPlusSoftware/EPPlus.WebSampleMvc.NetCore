@@ -18,12 +18,25 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-12">
-        <div class="text-center">
-            <h1 class="display-4">Html export</h1>
-            <p>Html and CSS export of the built in tables/table styles in Excel</p>
+    <div class="col text-center">
+        <h4>Html export - Google line chart</h4>
+    </div>
+</div>
+<div class="row my-2">
+    <div class="col bg-light rounded">
+        <div class="row">
+            <div class="col-6">
+                <a href="/HtmlExport/ExportTable2">&laquo; Previous sample</a>
+            </div>
+            <div class="col-6 text-right">
+                <a href="/HtmlExport/ExportTable4">Next sample &raquo;</a>
+            </div>
         </div>
-        <p>This table contains over 10 000 currency rates and is connected to a google charts line chart. The rates are imported to EPPlus from a .csv file using the LoadFromText function and exported to css/html.</p>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <p>This table contains over 2 000 currency rates and is connected to a <a href="https://developers.google.com/chart/interactive/docs/gallery/linechart" target="_blank">Google charts line chart</a>. The rates are imported to EPPlus from a .csv file using the <a href="https://github.com/EPPlusSoftware/EPPlus/wiki/LoadFromText" target="_blank">LoadFromText</a> function and exported to css/html using table style Light2.</p>
     </div>
 </div>
 <div class="row">
@@ -37,7 +50,7 @@
 </div>
 <div class="row">
     <div class="col">
-        @Html.Raw(Model.Html);
+        @Html.Raw(Model.Html)
     </div>
 </div>
 <script type="text/javascript">
@@ -48,7 +61,9 @@
     // Set a callback to run when the Google Visualization API is loaded.
     google.charts.setOnLoadCallback(drawCharts);
 
-
+    // Reads data from the table and creates a google.visualization.DataTable.
+    // The argument indexes should be an array containing the 0-based indexes of the table
+    // columns to use.
     function getDataFromTable(indexes) {
         // Create the data table.
         var data = new google.visualization.DataTable();
@@ -64,14 +79,11 @@
             }
         });
 
-        var startDate = new Date();
-        console.log("start: " + new Date().getTime());
         // read the data from the tbody and insert it into the table
         let rows = [];
         $(".epplus-table tbody tr").each(function (i, tableRow) {
             var row = [];
             var colIx = 0;
-            var nLogs = 0;
             indexes.forEach(ix => {
                 let dataType = dataTypes[colIx++];
                 var cell = $(tableRow).children().eq(ix);
@@ -82,32 +94,34 @@
                     row.push(parseFloat($(cell).data("value")));
                 }
                 else if (dataType == "datetime") {
-                    if (nLogs++ < 10) {
-                    }
                     row.push(new Date(parseFloat($(cell).data("value"))));
                 }
             });
             rows.push(row);
         });
-        console.log("end: " + (new Date().getTime() - startDate.getTime()));
         data.addRows(rows);
         return data;
     }
 
     // Callback that creates and populates a data table,
-    // instantiates the pie chart, passes in the data and
+    // instantiates the line chart, passes in the data and
     // draws it.
     function drawCharts() {
         var dt = getDataFromTable([0, 1, 2, 3, 4]);
-        drawLineChart(dt, "USD rate");
+        drawLineChart(dt, "Historical currency rates in USD");
     }
 
     function drawLineChart(data, title) {
         var options = {
             'title': title,
-            'width': 1000,
+            'width': '100%',
             'height': 400,
-            'is3D': true
+            'is3D': true,
+            'animation': {
+                startup: true,
+                duration: 1000,
+                easing: 'in'
+            }
         };
         // Instantiate and draw our chart, passing in some options.
         var chart = new google.visualization.LineChart(document.getElementById('currency-chart'));

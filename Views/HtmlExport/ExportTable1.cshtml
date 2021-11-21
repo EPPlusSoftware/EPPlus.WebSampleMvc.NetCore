@@ -19,73 +19,101 @@
 </div>
 <div class="row">
     <div class="col text-center">
-        <h1 class="display-4">Html export</h1>
+        <h4>Html export - export table html and css</h4>
+    </div>
+</div>
+<div class="row my-2">
+    <div class="col bg-light rounded">
+        <div class="row">
+            <div class="col-6">
+                <a href="#" class="text-secondary">&laquo; Previous sample</a>
+            </div>
+            <div class="col-6 text-right">
+                <a href="/HtmlExport/ExportTable2">Next sample &raquo;</a>
+            </div>
+        </div>
     </div>
 </div>
 <div class="row justify-content-center">
-    <div class="col-sm-12 col-md-5 bg-light p-3 m-2">
-        <p>Html and CSS export of the tables/built in table styles in Excel</p>
-        <p>Use the dropdowns to change table style and theme, then click the Reload button. This is the only roundtrip done back to EPPlus. Change the appearance of the table by checking/unchecking the checkboxes (this is done by adding removing css-classes from the table and, for DataTables.js, javascript).</p>
+    <div class="col-sm-12 col-md-6 bg-light p-2">
+        <div class="bg-white p-3 rounded border border-dark">
+            <p>Use the dropdowns to change table style and theme, then click the Reload button. This is the only roundtrip done back to EPPlus. Change the appearance of the table by checking/unchecking the checkboxes.</p>
+        </div>
     </div>
-    <div class="col-sm-12 col-md-5 bg-light p-3 m-2">
-        <p>All CSS classes needed to style the table is exported from EPPlus and based on Excels table styles and themes. You can use the dev tools of your favorite browser to see how the classes are applied to the table.</p>
+    <div class="col-sm-12 col-md-6 bg-light p-2">
+        <div class="bg-white p-3 rounded border border-dark" style="height:100%">
+            <p>All CSS classes needed to style the table is exported from EPPlus and based on Excels table styles and themes. You can use the dev tools of your favorite browser to see how the classes are applied to the table.</p>
+        </div>
     </div>
 </div>
 <form asp-action="ExportTable1" method="post" id="form1">
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(x => x.GetWorkbook, new { id = "get-workbook" })
     <div class="row justify-content-center">
-        <div class="col-sm-12 col-md-5 m-2 p-3 border border-secondary rounded shadow">
-
-            @Html.AntiForgeryToken()
-            @Html.HiddenFor(x => x.GetWorkbook, new { id = "get-workbook" })
-            <div class="form-group">
-                <label>Theme</label>
-                @Html.DropDownListFor(x => x.Theme, Model.AllThemes, new { @class = "form-control" })
-            </div>
-            <div class="form-group">
-                <label>Table style</label>
-                @Html.DropDownListFor(x => x.TableStyle, Model.AllBuiltInTableStyles, new { @class = "form-control" })
-            </div>
-            <div class="form-check">
-                @Html.CheckBoxFor(x => x.ShowFirstColumn, new { @class = "form-control-check", id = "chkShowFirstColumn" })
-                <label class="form-check-label">Show first column</label>
-            </div>
-            <div class="form-check">
-                @Html.CheckBoxFor(x => x.ShowLastColumn, new { @class = "form-control-check", id = "chkShowLastColumn" })
-                <label class="form-check-label">Show last column</label>
-            </div>
-            <div class="form-check">
-                @Html.CheckBoxFor(x => x.ShowColumnStripes, new { @class = "form-control-check", id = "chkShowColumnStripes" })
-                <label class="form-check-label">Show column stripes</label>
-            </div>
-            <div class="form-check">
-                @Html.CheckBoxFor(x => x.ShowRowsStripes, new { @class = "form-control-check", id = "chkShowRowStripes" })
-                <label class="form-check-label">Show row stripes</label>
-            </div>
-            <div class="form-group mt-2">
-                <button type="submit" class="btn btn-primary" id="btn-submit-form">Reload</button>
-                <a href="#" class="btn btn-secondary float-right" id="btn-get-workbook">Get the workbook</a>
+        <div class="col-sm-12 col-md-6 p-3">
+            <div class="bg-light rounded p-2">
+                <div class="row">
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group">
+                            <label>Theme</label>
+                            @Html.DropDownListFor(x => x.Theme, Model.AllThemes, new { @class = "form-control" })
+                        </div>
+                     </div>
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group">
+                            <label>Table style</label>
+                            @Html.DropDownListFor(x => x.TableStyle, Model.AllBuiltInTableStyles, new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-check">
+                            @Html.CheckBoxFor(x => x.ShowFirstColumn, new { @class = "form-control-check", id = "chkShowFirstColumn" })
+                            <label class="form-check-label">Show first column</label>
+                        </div>
+                        <div class="form-check">
+                            @Html.CheckBoxFor(x => x.ShowLastColumn, new { @class = "form-control-check", id = "chkShowLastColumn" })
+                            <label class="form-check-label">Show last column</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-check">
+                            @Html.CheckBoxFor(x => x.ShowColumnStripes, new { @class = "form-control-check", id = "chkShowColumnStripes" })
+                            <label class="form-check-label">Show column stripes</label>
+                        </div>
+                        <div class="form-check">
+                            @Html.CheckBoxFor(x => x.ShowRowsStripes, new { @class = "form-control-check", id = "chkShowRowStripes" })
+                            <label class="form-check-label">Show row stripes</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group mt-2">
+                    <a href="#" class="btn btn-sm btn-secondary" id="btn-get-workbook">Get the workbook</a>
+                    <button type="submit" class="btn btn-sm btn-primary float-right" id="btn-submit-form">Reload</button>
+                </div>
             </div>
         </div>
-        <div class="col-sm-12 col-md-5 m-2 ml-md-3 p-3 border border-secondary rounded shadow">
-            <p>The checkboxes below demonstrates that you can use the css from EPPlus with css/javascript from other frameworks</p>
-            <div class="form-check">
-                @Html.CheckBoxFor(x => x.AddBootstrapClasses, new { @class = "form-control-check", id = "chkAddBootstrapClasses" })
-                <label class="form-check-label">Add Bootstrap 4 table classes</label>
-            </div>
-            <div class="form-check">
-                @Html.CheckBoxFor(x => x.AddDataTablesJs, new { @class = "form-control-check", id = "chkAddDataTablesJs" })
-                <label class="form-check-label">Add DataTables.js</label>
+        <div class="col-sm-12 col-md-6 p-3">
+            <div class="bg-light rounded p-2" style="height:100%">
+                <p>The checkboxes below demonstrates that you can use the css from EPPlus with css/javascript from other frameworks</p>
+                <div class="form-check">
+                    @Html.CheckBoxFor(x => x.AddBootstrapClasses, new { @class = "form-control-check", id = "chkAddBootstrapClasses" })
+                    <label class="form-check-label">Add Bootstrap 4 table classes</label>
+                </div>
+                <div class="form-check">
+                    @Html.CheckBoxFor(x => x.AddDataTablesJs, new { @class = "form-control-check", id = "chkAddDataTablesJs" })
+                    <label class="form-check-label">Add DataTables.js</label>
+                </div>
             </div>
         </div>
     </div>
-    <hr />
     <div class="row">
-        <div class="col">
+        <div class="col border-top border-secondary">
             <label>Css classes on the table element</label>
             <p class="bg-light p-2 rounded" style="font-family: Courier New, Courier, monospace" id="table-class-info"></p>
         </div>
     </div>
-    <hr />
     <div class="row mt-3">
         <div class="col" id="colTable">
             @Html.Raw(Model.Html)

@@ -18,12 +18,26 @@
     </div>
 </div>
 <div class="row">
+    <div class="col text-center">
+        <h4>Html export - connect table data with external components</h4>
+    </div>
+</div>
+<div class="row my-2">
+    <div class="col bg-light rounded">
+        <div class="row">
+            <div class="col-6">
+                <a href="/HtmlExport/ExportTable1">&laquo; Previous sample</a>
+            </div>
+            <div class="col-6 text-right">
+                <a href="/HtmlExport/ExportTable3">Next sample &raquo;</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
     <div class="col-12">
-        <div class="text-center">
-            <h1 class="display-4">Html export</h1>
-            <p>Html and CSS export of the built in tables/table styles in Excel</p>
-            <p>Use the dropdown above the table to change style</p>
-            <p>In this sample we have connected the exported table to Google charts with some simple javascript.</p>
+        <div class="p-1">
+            <p>In this sample we have connected the exported table to Google charts with javascript. The table data is imported to EPPlus via the <a href="https://github.com/EPPlusSoftware/EPPlus/wiki/LoadFromDataTable" target="_blank">LoadFromDataTable</a> function and the Density column is a calculated table column.</p>
         </div>
     </div>
 </div>
@@ -62,17 +76,17 @@
     <div class="col-sm-12 col-md-6">
         <div class="row">
             <div class="col border border-secondary rounded shadow p-2">
-                <div id="geo-chart"></div>
+                <div id="geo-chart" style="height:300px"></div>
             </div>
         </div>
         <div class="row">
             <div class="col border border-secondary rounded shadow p-2 mt-2">
-                <div id="pie-chart"></div>
+                <div id="pie-chart" style="height:300px"></div>
             </div>
         </div>
         <div class="row">
             <div class="col border border-secondary rounded shadow p-2 mt-2">
-                <div id="bar-chart"></div>
+                <div id="bar-chart" style="height:300px"></div>
             </div>
         </div>
     </div>
