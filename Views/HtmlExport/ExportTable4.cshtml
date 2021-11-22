@@ -53,17 +53,17 @@
 <script type="text/javascript">
 
 function getValue(cell, datatype) {
-            console.log("cell: " + cell.innerHTML + ", dt: " + datatype);
-            if (datatype == "string") {
-                return cell.innerHTML;
-            }
-            else if (datatype == "number") {
-                return parseFloat(cell.getAttribute("data-value"));
-            }
-            else if (datatype == "datetime") {
-                return new Date(parseInt(cell.getAttribute("data-value")));
-            }
-        }
+    console.log("cell: " + cell.innerHTML + ", dt: " + datatype);
+    if (datatype == "string") {
+        return cell.innerHTML;
+    }
+    else if (datatype == "number") {
+        return parseFloat(cell.getAttribute("data-value"));
+    }
+    else if (datatype == "datetime") {
+        return new Date(parseInt(cell.getAttribute("data-value")));
+    }
+}
 
 // Reads data from the table and creates input for a Chart.js line chart.
 // The argument xCol should be the 0-based index of the table column that contains the labels of the x-axis.
@@ -90,6 +90,7 @@ function getArraysFromTable(xCol, indexes) {
                         borderColor: colors[hIx],
                         backgroundColor: colors[hIx],
                         borderWidth: 1,
+                        pointRadius: 0.5,
                         fill: false
                     });
                 }
