@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using Faker;
+﻿using System.Data;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using OfficeOpenXml.Table;
@@ -110,6 +105,7 @@ namespace EPPlus.WebSampleMvc.NetCore.Models.HtmlExport
                 Css = table.HtmlExporter.GetCssString();
                 Html = table.HtmlExporter.GetHtmlString(o =>
                 {
+                    o.Minify = false;
                     o.AdditionalTableClassNames.Add("table");
                     o.AdditionalTableClassNames.Add("table-sm");
                     o.TableId = "population-table";
