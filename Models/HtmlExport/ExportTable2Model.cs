@@ -83,11 +83,15 @@ namespace EPPlus.WebSampleMvc.NetCore.Models.HtmlExport
                 // configure the table
                 var table = sheet.Tables.GetFromRange(tableRange);
                 table.ShowTotal = true;
+                table.Columns[0].TotalsRowLabel = "Total";
                 table.Columns[1].TotalsRowFunction = RowFunctions.Sum;
+                table.Columns[2].TotalsRowFunction = RowFunctions.Sum;
+                
                 // add column for population density
                 table.Columns.Add(1);
                 table.Columns[3].CalculatedColumnFormula = $"{table.Name}[[#This Row],[Population]]/{table.Name}[[#This Row],[Area (km2)]]";
                 table.Columns[3].Name = "Density";
+                table.Columns[3].TotalsRowFunction = RowFunctions.Average;
                 sheet.Calculate();
 
                 sheet.Cells[tableRange.Start.Row, 1, tableRange.End.Row, 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
@@ -95,9 +99,21 @@ namespace EPPlus.WebSampleMvc.NetCore.Models.HtmlExport
                 sheet.Cells[tableRange.Start.Row, 3, tableRange.End.Row, 3].Style.Numberformat.Format = "#,##0 \"km2\"";
                 sheet.Cells[tableRange.Start.Row, 4, tableRange.End.Row, 4].Style.Numberformat.Format = "#,##0";
 
+                // format the total row
+                sheet.Cells[tableRange.End.Row + 1, 1, tableRange.End.Row + 1, 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                sheet.Cells[tableRange.End.Row + 1, 2, tableRange.End.Row + 1, 2].Style.Numberformat.Format = "#,##0";
+                sheet.Cells[tableRange.End.Row + 1, 3, tableRange.End.Row + 1 + 1 + 1, 3].Style.Numberformat.Format = "#,##0 \"km2\"";
+                sheet.Cells[tableRange.End.Row + 1, 4, tableRange.End.Row + 1, 4].Style.Numberformat.Format = "#,##0 \"(avg)\"";
+
+
                 // export css and html
                 Css = table.HtmlExporter.GetCssString();
-                Html = table.HtmlExporter.GetHtmlString();
+                Html = table.HtmlExporter.GetHtmlString(o =>
+                {
+                    o.AdditionalTableClassNames.Add("table");
+                    o.AdditionalTableClassNames.Add("table-sm");
+                    o.TableId = "population-table";
+                });
             }
         }
 
