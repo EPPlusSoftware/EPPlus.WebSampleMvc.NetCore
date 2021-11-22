@@ -1,13 +1,9 @@
 ﻿using OfficeOpenXml;
-using OfficeOpenXml.Export.HtmlExport;
 using OfficeOpenXml.Style;
 using OfficeOpenXml.Table;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace EPPlus.WebSampleMvc.NetCore.Models.HtmlExport
 {

@@ -41,19 +41,97 @@
     </div>
 </div>
 <div class="row">
+    <div class="col my-3">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" href="#" id="tab-demo">Demo</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" id="tab-csharp">C#</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" id="tab-js">Javascript</a>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="row demo">
     <div class="col">
         <canvas id="myChart"></canvas>
     </div>
 </div>
-<div class="row">
+<div class="row demo">
     <div class="col">
         @Html.Raw(Model.Html)
     </div>
 </div>
-<script type="text/javascript">
+<div class="row csharp">
+    <div class="col">
+        <pre>
+        <code class="language-csharp hljs">
+using OfficeOpenXml;
+using OfficeOpenXml.Style;
+using OfficeOpenXml.Table;
+using System;
+using System.Globalization;
+using System.IO;
+
+namespace EPPlus.WebSampleMvc.NetCore.Models.HtmlExport
+{
+    public class ExportTable4Model
+    {
+        public void SetupSampleData(TableStyles style = TableStyles.Dark1)
+        {
+            using (var package = new ExcelPackage())
+            {
+                var sheet = package.Workbook.Worksheets.Add("Html export sample 4");
+                var csvFileInfo = new FileInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"data\\currencies2011weekly.csv"));
+                var format = new ExcelTextFormat
+                {
+                    Delimiter = ';',
+                    Culture = CultureInfo.InvariantCulture,
+                    DataTypes = new eDataTypes[] { eDataTypes.DateTime, eDataTypes.Number, eDataTypes.Number, eDataTypes.Number }
+                };
+                var tableRange = sheet.Cells["A1"].LoadFromText(csvFileInfo, format, style, true);
+
+                sheet.Cells["B1:E1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                sheet.Cells[tableRange.Start.Row, 1, tableRange.End.Row, 1].Style.Numberformat.Format = "yyyy-MM-dd";
+                sheet.Cells[tableRange.Start.Row, 3, tableRange.End.Row, 3].Style.Numberformat.Format = "#,##0.0000";
+                sheet.Cells[tableRange.Start.Row, 4, tableRange.End.Row, 4].Style.Numberformat.Format = "#,##0.0000";
+
+                var table = sheet.Tables.GetFromRange(tableRange);
+                // export css and html
+                Css = table.HtmlExporter.GetCssString();
+                Html = table.HtmlExporter.GetHtmlString(o => 
+                    {
+                        o.Culture = CultureInfo.InvariantCulture;
+                        o.TableId = "currency-table";
+                        o.AdditionalTableClassNames.Add("table");
+                    });
+            }
+        }
+
+        public string Css { get; set; }
+
+        public string Html { get; set; }
+    }
+}
+
+
+            </code>
+        </pre>
+    </div>
+</div>
+<div class="row js">
+    <div class="col">
+        <pre>
+        <code class="language-js hljs" id="js-code"></code>
+        </pre>
+    </div>
+</div>
+<script type="text/javascript" id="chart-script">
 
 function getValue(cell, datatype) {
-    console.log("cell: " + cell.innerHTML + ", dt: " + datatype);
     if (datatype == "string") {
         return cell.innerHTML;
     }
@@ -133,5 +211,41 @@ const config = {
             }
         }
     };
-    const myChart = new Chart(document.getElementById("myChart"), config);
+const myChart = new Chart(document.getElementById("myChart"), config);
+</script>
+<script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function () {
+        jQuery(".csharp").hide();
+        jQuery(".js").hide();
+        jQuery("#js-code").html(jQuery("#chart-script").html());
+        //let html = new DOMParser().parseFromString(jQuery("#table-container").innerHTML, "text/html").documentElement.textContent;
+        //jQuery("#html-code").html(html);
+        hljs.highlightAll();
+        jQuery("#tab-csharp").click(function () {
+            jQuery(".demo").hide();
+            jQuery(".csharp").show();
+            jQuery(".js").hide();
+            jQuery("#tab-demo").removeClass("active");
+            jQuery("#tab-csharp").addClass("active");
+            jQuery("#tab-js").removeClass("active");
+        });
+        jQuery("#tab-demo").click(function () {
+            jQuery(".demo").show();
+            jQuery(".csharp").hide();
+            jQuery(".js").hide();
+            jQuery(".html").hide();
+            jQuery("#tab-demo").addClass("active");
+            jQuery("#tab-csharp").removeClass("active");
+            jQuery("#tab-js").removeClass("active");
+            jQuery("#tab-html").removeClass("active");
+        });
+        jQuery("#tab-js").click(function () {
+            jQuery(".demo").hide();
+            jQuery(".csharp").hide();
+            jQuery(".js").show();
+            jQuery("#tab-demo").removeClass("active");
+            jQuery("#tab-csharp").removeClass("active");
+            jQuery("#tab-js").addClass("active");
+        });
+    });
 </script>

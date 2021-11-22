@@ -72,11 +72,10 @@ namespace EPPlus.WebSampleMvc.NetCore.Models.HtmlExport
             {
                 var sheet = package.Workbook.Worksheets.Add("Html export sample 2");
                 var tableRange = sheet.Cells["A1"].LoadFromDataTable(_dataTable, true, style);
-                // sort the table range
-                tableRange.Sort(x => x.SortBy.Column(1, eSortOrder.Descending));
                 
                 // configure the table
                 var table = sheet.Tables.GetFromRange(tableRange);
+                table.Sort(x => x.SortBy.ColumnNamed("Population", eSortOrder.Descending));
                 table.ShowTotal = true;
                 table.Columns[0].TotalsRowLabel = "Total";
                 table.Columns[1].TotalsRowFunction = RowFunctions.Sum;
@@ -84,21 +83,28 @@ namespace EPPlus.WebSampleMvc.NetCore.Models.HtmlExport
                 
                 // add column for population density
                 table.Columns.Add(1);
+                tableRange = table.Range;
                 table.Columns[3].CalculatedColumnFormula = $"{table.Name}[[#This Row],[Population]]/{table.Name}[[#This Row],[Area (km2)]]";
                 table.Columns[3].Name = "Density";
                 table.Columns[3].TotalsRowFunction = RowFunctions.Average;
                 sheet.Calculate();
 
-                sheet.Cells[tableRange.Start.Row, 1, tableRange.End.Row, 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-                sheet.Cells[tableRange.Start.Row, 2, tableRange.End.Row, 2].Style.Numberformat.Format = "#,##0";
-                sheet.Cells[tableRange.Start.Row, 3, tableRange.End.Row, 3].Style.Numberformat.Format = "#,##0 \"km2\"";
-                sheet.Cells[tableRange.Start.Row, 4, tableRange.End.Row, 4].Style.Numberformat.Format = "#,##0";
+                // format the header
+                sheet.Cells[1, tableRange.Start.Column + 1, 1, tableRange.End.Column].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+
+                // format the rows
+                var lastDataRow = tableRange.End.Row - 1;
+                sheet.Cells[tableRange.Start.Row, 1, lastDataRow, 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                sheet.Cells[tableRange.Start.Row, 2, lastDataRow, 2].Style.Numberformat.Format = "#,##0";
+                sheet.Cells[tableRange.Start.Row, 3, lastDataRow, 3].Style.Numberformat.Format = "#,##0 \"km2\"";
+                sheet.Cells[tableRange.Start.Row, 4, lastDataRow, 4].Style.Numberformat.Format = "#,##0.0";
 
                 // format the total row
-                sheet.Cells[tableRange.End.Row + 1, 1, tableRange.End.Row + 1, 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-                sheet.Cells[tableRange.End.Row + 1, 2, tableRange.End.Row + 1, 2].Style.Numberformat.Format = "#,##0";
-                sheet.Cells[tableRange.End.Row + 1, 3, tableRange.End.Row + 1 + 1 + 1, 3].Style.Numberformat.Format = "#,##0 \"km2\"";
-                sheet.Cells[tableRange.End.Row + 1, 4, tableRange.End.Row + 1, 4].Style.Numberformat.Format = "#,##0 \"(avg)\"";
+                var totalRow = tableRange.End.Row;
+                sheet.Cells[totalRow, 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                sheet.Cells[totalRow, 2].Style.Numberformat.Format = "#,##0";
+                sheet.Cells[totalRow, 3].Style.Numberformat.Format = "#,##0 \"km2\"";
+                sheet.Cells[totalRow, 4].Style.Numberformat.Format = "\"Avg: \"#,##0.0 ";
 
 
                 // export css and html
