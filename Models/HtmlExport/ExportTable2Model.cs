@@ -115,6 +115,8 @@ namespace EPPlus.WebSampleMvc.NetCore.Models.HtmlExport
                     o.AdditionalTableClassNames.Add("table");
                     o.AdditionalTableClassNames.Add("table-sm");
                     o.TableId = "population-table";
+                    o.Accessibility.TableSettings.AriaDescribedBy = "table-description";
+                    o.Accessibility.TableSettings.AriaLabel = "Demo table";
                 });
             }
         }

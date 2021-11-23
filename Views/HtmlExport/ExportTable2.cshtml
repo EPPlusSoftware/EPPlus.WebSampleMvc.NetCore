@@ -36,7 +36,7 @@
 </div>
 <div class="row">
     <div class="col-12">
-        <div class="p-1">
+        <div class="p-1" id="table-description">
             <p>In this sample we have connected the exported table to Google charts with javascript. The table data is imported to EPPlus via the <a href="https://github.com/EPPlusSoftware/EPPlus/wiki/LoadFromDataTable" target="_blank">LoadFromDataTable</a> function and the Density column is a calculated table column. The total row of the table is calculated via EPPlus built in Total row functions.</p>
             <p>The table has addtional classes from Bootstrap: table and table-sm</p>
         </div>
@@ -226,6 +226,8 @@ namespace EPPlus.WebSampleMvc.NetCore.Models.HtmlExport
                     o.AdditionalTableClassNames.Add("table");
                     o.AdditionalTableClassNames.Add("table-sm");
                     o.TableId = "population-table";
+                    o.Accessibility.TableSettings.AriaDescribedBy = "table-description";
+                    o.Accessibility.TableSettings.AriaLabel = "Demo table";
                 });
             }
         }
@@ -252,7 +254,7 @@ namespace EPPlus.WebSampleMvc.NetCore.Models.HtmlExport
 </div>
 <div class="row html">
     <div class="col">
-        <pre>
+        <pre style="white-space: pre-wrap">
             <code class="language-html hljs" id="html-code">
  @Model.Html.Trim()
             </code>
@@ -301,7 +303,6 @@ namespace EPPlus.WebSampleMvc.NetCore.Models.HtmlExport
                     row.push(new Date(parseFloat($(cell).data("value"))));
                 }
             });
-            console.log(row);
             rows.push(row);
         });
         data.addRows(rows);

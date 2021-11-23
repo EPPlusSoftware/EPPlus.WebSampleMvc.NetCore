@@ -29,6 +29,7 @@ namespace EPPlus.WebSampleMvc.NetCore.Models.HtmlExport
                 sheet.Cells[tableRange.Start.Row, 4, tableRange.End.Row, 4].Style.Numberformat.Format = "#,##0.0000";
 
                 var table = sheet.Tables.GetFromRange(tableRange);
+                table.ShowFirstColumn = true;
                 // export css and html
                 Css = table.HtmlExporter.GetCssString();
                 Html = table.HtmlExporter.GetHtmlString(o => 
@@ -36,6 +37,7 @@ namespace EPPlus.WebSampleMvc.NetCore.Models.HtmlExport
                         o.Culture = CultureInfo.InvariantCulture;
                         o.TableId = "currency-table";
                         o.AdditionalTableClassNames.Add("table");
+                        o.AdditionalTableClassNames.Add("table-sm");
                     });
             }
         }
