@@ -61,6 +61,18 @@
     // Set a callback to run when the Google Visualization API is loaded.
     google.charts.setOnLoadCallback(drawCharts);
 
+    function getValue(cell, datatype) {
+        if (datatype == "string") {
+            return cell.innerHTML;
+        }
+        else if (datatype == "number") {
+            return parseFloat(cell.getAttribute("data-value"));
+        }
+        else if (datatype == "datetime") {
+            return new Date(parseInt(cell.getAttribute("data-value")));
+        }
+    }
+
     // Reads data from the table and creates a google.visualization.DataTable.
     // The argument indexes should be an array containing the 0-based indexes of the table
     // columns to use.
@@ -68,37 +80,32 @@
         // Create the data table.
         var data = new google.visualization.DataTable();
         var dataTypes = [];
-        var n = 0;
 
         // read data types from the thead and define columns in the google.visualization.DataTable
-        $(".epplus-table thead tr th").each(function (i, elem) {
-            if (indexes.includes(i)) {
-                var dt = $(elem).data("datatype");
-                dataTypes[n++] = dt;
-                data.addColumn(dt, elem.innerHTML);
+        var headers = document.querySelectorAll("table.epplus-table thead tr th");
+        for (var hIx = 0; hIx < headers.length; hIx++) {
+            let hCell = headers[hIx];
+            if (indexes.indexOf(hIx) > -1) {
+                let dt = hCell.getAttribute("data-datatype");
+                dataTypes.push(dt);
+                data.addColumn(dt, hCell.innerHTML);
             }
-        });
+        }
 
         // read the data from the tbody and insert it into the table
         let rows = [];
-        $(".epplus-table tbody tr").each(function (i, tableRow) {
+        var tableRows = document.querySelectorAll("table.epplus-table tbody tr");
+        for (var rIx = 0; rIx < tableRows.length; rIx++) {
             var row = [];
-            var colIx = 0;
-            indexes.forEach(ix => {
-                let dataType = dataTypes[colIx++];
-                var cell = $(tableRow).children().eq(ix);
-                if (dataType == "string") {
-                    row.push($(cell).html());
-                }
-                else if (dataType == "number") {
-                    row.push(parseFloat($(cell).data("value")));
-                }
-                else if (dataType == "datetime") {
-                    row.push(new Date(parseFloat($(cell).data("value"))));
-                }
-            });
+            let tableRow = tableRows[rIx];
+            for (var iIx = 0; iIx < indexes.length; iIx++) {
+                let ix = indexes[iIx];
+                let dataType = dataTypes[iIx];
+                let val = getValue(tableRow.children[ix], dataType);
+                row.push(val);
+            }
             rows.push(row);
-        });
+        }
         data.addRows(rows);
         return data;
     }

@@ -347,18 +347,6 @@ namespace EPPlus.WebSampleMvc.NetCore.Models.HtmlExport
         chart.draw(data, options);
     }
 
-    function drawBubbleChart(data) {
-        var options = {
-            'title': 'Population in some countries',
-            'width': 500,
-            'height': 300,
-            'is3D': true
-        };
-        // Instantiate and draw our chart, passing in some options.
-        var chart = new google.visualization.BubbleChart(document.getElementById('pie-chart'));
-        chart.draw(data, options);
-    }
-
     function drawBarChart(data, title){
         var options = {
             'title': title,
