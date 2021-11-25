@@ -107,17 +107,18 @@ namespace EPPlus.WebSampleMvc.NetCore.Models.HtmlExport
                 sheet.Cells[totalRow, 4].Style.Numberformat.Format = "\"Avg: \"#,##0.0 ";
 
 
+                // Configure export settings
+                var settings = table.HtmlExporter.Settings;
+                settings.Minify = false;
+                settings.AdditionalTableClassNames.Add("table");
+                settings.AdditionalTableClassNames.Add("table-sm");
+                settings.TableId = "population-table";
+                settings.Accessibility.TableSettings.AriaDescribedBy = "table-description";
+                settings.Accessibility.TableSettings.AriaLabel = "Demo table";
+
                 // export css and html
                 Css = table.HtmlExporter.GetCssString();
-                Html = table.HtmlExporter.GetHtmlString(o =>
-                {
-                    o.Minify = false;
-                    o.AdditionalTableClassNames.Add("table");
-                    o.AdditionalTableClassNames.Add("table-sm");
-                    o.TableId = "population-table";
-                    o.Accessibility.TableSettings.AriaDescribedBy = "table-description";
-                    o.Accessibility.TableSettings.AriaLabel = "Demo table";
-                });
+                Html = table.HtmlExporter.GetHtmlString();
             }
         }
 

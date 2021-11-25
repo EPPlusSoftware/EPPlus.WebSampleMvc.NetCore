@@ -66,7 +66,7 @@ namespace EPPlus.WebSampleMvc.NetCore.Models.HtmlExport
                 
                 var sheet = package.Workbook.Worksheets.Add("Html export sample 1");
                 var tableRange = sheet.Cells["A1"].LoadFromDataTable(_dataTable, true, style);
-                sheet.Cells["D2:D52"].Style.Numberformat.Format = "yyyy-MM-dd";
+                sheet.Cells[tableRange.Start.Row + 1, 4, tableRange.End.Row, 4].Style.Numberformat.Format = "yyyy-MM-dd";
                 tableRange.AutoFitColumns();
                 
                 var table = sheet.Tables.GetFromRange(tableRange);
@@ -77,6 +77,8 @@ namespace EPPlus.WebSampleMvc.NetCore.Models.HtmlExport
                 table.ShowColumnStripes = ShowColumnStripes;
                 table.ShowRowStripes = ShowRowsStripes;
 
+                // Export Html and CSS
+                table.HtmlExporter.Settings.Minify = false;
                 Css = table.HtmlExporter.GetCssString();
                 Html = table.HtmlExporter.GetHtmlString();
                 WorkbookBytes = package.GetAsByteArray();

@@ -41,6 +41,9 @@
                 <a class="nav-link active" href="#" id="tab-demo">Demo</a>
             </li>
             <li class="nav-item">
+                <a class="nav-link" href="#" id="tab-csharp">C#</a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" href="#" id="tab-html">HTML</a>
             </li>
             <li class="nav-item">
@@ -137,8 +140,66 @@
         </div>
     </form>
 </div>
+<div class="row csharp">
+    <div class="col">
+        <pre style="white-space: pre-wrap">
+            <code class="language-csharp hljs">
+public void SetupSampleData(int theme, TableStyles? style = TableStyles.Dark1)
+{
+    InitDataTable();
+    using(var package = new ExcelPackage())
+    {
+        if(theme > 0)
+        {
+            var fileName = string.Empty;
+            switch(theme)
+            {
+                case 1:
+                    fileName = "Ion";
+                    break;
+                case 2:
+                    fileName = "Banded";
+                    break;
+                case 3:
+                    fileName = "Parallax";
+                    break;
+                default:
+                    fileName = "Ion";
+                    break;
+            }
+            var fi = new FileInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"themes\\{fileName}.thmx"));
+            package.Workbook.ThemeManager.Load(fi);
+        }
+                
+        var sheet = package.Workbook.Worksheets.Add("Html export sample 1");
+        var tableRange = sheet.Cells["A1"].LoadFromDataTable(_dataTable, true, style);
+        sheet.Cells[tableRange.Start.Row + 1, 4, tableRange.End.Row, 4].Style.Numberformat.Format = "yyyy-MM-dd";
+        tableRange.AutoFitColumns();
+                
+        var table = sheet.Tables.GetFromRange(tableRange);
+                
+        // table properties
+        table.ShowFirstColumn = ShowFirstColumn;
+        table.ShowLastColumn = ShowLastColumn;
+        table.ShowColumnStripes = ShowColumnStripes;
+        table.ShowRowStripes = ShowRowsStripes;
+
+        // Export Html and CSS
+        table.HtmlExporter.Settings.Minify = false;
+        Css = table.HtmlExporter.GetCssString();
+        Html = table.HtmlExporter.GetHtmlString();
+
+        // Return the workbook as a byte array
+        WorkbookBytes = package.GetAsByteArray();
+    }
+}
+            </code>
+        </pre>
+    </div>
+</div>
 <div class="row html">
     <div class="col">
+        <p>Html as it was exported</p>
         <pre style="white-space: pre-wrap">
         <code class="language-html hljs" id="html-code">
  @Model.Html.Trim()
@@ -274,6 +335,7 @@
     document.addEventListener("DOMContentLoaded", function () {
         jQuery(".css").hide();
         jQuery(".html").hide();
+        jQuery(".csharp").hide();
         //let html = new DOMParser().parseFromString(jQuery("#table-container").innerHTML, "text/html").documentElement.textContent;
         //jQuery("#html-code").html(html);
         hljs.highlightAll();
@@ -281,25 +343,41 @@
             jQuery(".demo").hide();
             jQuery(".css").show();
             jQuery(".html").hide();
+            jQuery(".csharp").hide();
             jQuery("#tab-demo").removeClass("active");
             jQuery("#tab-css").addClass("active");
             jQuery("#tab-html").removeClass("active");
+            jQuery("#tab-csharp").removeClass("active");
         });
         jQuery("#tab-demo").click(function () {
             jQuery(".demo").show();
             jQuery(".csharp").hide();
             jQuery(".html").hide();
+            jQuery(".csharp").hide();
             jQuery("#tab-demo").addClass("active");
             jQuery("#tab-css").removeClass("active");
             jQuery("#tab-html").removeClass("active");
+            jQuery("#tab-csharp").removeClass("active");
         });
         jQuery("#tab-html").click(function () {
             jQuery(".demo").hide();
             jQuery(".html").show();
             jQuery(".css").hide();
+            jQuery(".csharp").hide();
             jQuery("#tab-demo").removeClass("active");
             jQuery("#tab-html").addClass("active");
             jQuery("#tab-css").removeClass("active");
+            jQuery("#tab-csharp").removeClass("active");
+        });
+        jQuery("#tab-csharp").click(function () {
+            jQuery(".demo").hide();
+            jQuery(".html").hide();
+            jQuery(".css").hide();
+            jQuery(".csharp").show();
+            jQuery("#tab-demo").removeClass("active");
+            jQuery("#tab-html").removeClass("active");
+            jQuery("#tab-css").removeClass("active");
+            jQuery("#tab-csharp").addClass("active");
         });
     });
 </script>

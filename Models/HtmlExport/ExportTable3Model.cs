@@ -29,20 +29,20 @@ namespace EPPlus.WebSampleMvc.NetCore.Models.HtmlExport
 
                 sheet.Cells["B1:E1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
                 sheet.Cells[tableRange.Start.Row, 1, tableRange.End.Row, 1].Style.Numberformat.Format = "yyyy-MM-dd";
-                sheet.Cells[tableRange.Start.Row, 3, tableRange.End.Row, 3].Style.Numberformat.Format = "#,##0.0000";
-                sheet.Cells[tableRange.Start.Row, 4, tableRange.End.Row, 4].Style.Numberformat.Format = "#,##0.0000";
+                sheet.Cells[tableRange.Start.Row, 2, tableRange.End.Row, 5].Style.Numberformat.Format = "#,##0.0000";
 
                 var table = sheet.Tables.GetFromRange(tableRange);
                 table.ShowFirstColumn = true;
+
+                var settings = table.HtmlExporter.Settings;
+                settings.Culture = CultureInfo.InvariantCulture;
+                settings.TableId = "currency-table";
+                settings.AdditionalTableClassNames.Add("table");
+                settings.AdditionalTableClassNames.Add("table-sm");
+
                 // export css and html
                 Css = table.HtmlExporter.GetCssString();
-                Html = table.HtmlExporter.GetHtmlString(o => 
-                    {
-                        o.Culture = CultureInfo.InvariantCulture;
-                        o.TableId = "currency-table";
-                        o.AdditionalTableClassNames.Add("table");
-                        o.AdditionalTableClassNames.Add("table-sm");
-                    });
+                Html = table.HtmlExporter.GetHtmlString();
             }
         }
 
