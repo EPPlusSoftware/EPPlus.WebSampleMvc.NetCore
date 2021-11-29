@@ -39,49 +39,56 @@ namespace EPPlus.WebSampleMvc.NetCore.Models.HtmlExport
 
         public void SetupSampleData(int theme, TableStyles? style = TableStyles.Dark1)
         {
+            // This method just fakes some data into a data table
             InitDataTable();
+
             using(var package = new ExcelPackage())
             {
-                if(theme > 0)
-                {
-                    var fileName = string.Empty;
-                    switch(theme)
-                    {
-                        case 1:
-                            fileName = "Ion";
-                            break;
-                        case 2:
-                            fileName = "Banded";
-                            break;
-                        case 3:
-                            fileName = "Parallax";
-                            break;
-                        default:
-                            fileName = "Ion";
-                            break;
-                    }
-                    var fi = new FileInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"themes\\{fileName}.thmx"));
-                    package.Workbook.ThemeManager.Load(fi);
-                }
-                
+                SetTheme(theme, package);
+
                 var sheet = package.Workbook.Worksheets.Add("Html export sample 1");
                 var tableRange = sheet.Cells["A1"].LoadFromDataTable(_dataTable, true, style);
+                // set number format for the BirthDate column
                 sheet.Cells[tableRange.Start.Row + 1, 4, tableRange.End.Row, 4].Style.Numberformat.Format = "yyyy-MM-dd";
                 tableRange.AutoFitColumns();
-                
+
                 var table = sheet.Tables.GetFromRange(tableRange);
-                
+
                 // table properties
-                table.ShowFirstColumn = ShowFirstColumn;
-                table.ShowLastColumn = ShowLastColumn;
-                table.ShowColumnStripes = ShowColumnStripes;
-                table.ShowRowStripes = ShowRowsStripes;
+                table.ShowFirstColumn = this.ShowFirstColumn;
+                table.ShowLastColumn = this.ShowLastColumn;
+                table.ShowColumnStripes = this.ShowColumnStripes;
+                table.ShowRowStripes = this.ShowRowsStripes;
 
                 // Export Html and CSS
                 table.HtmlExporter.Settings.Minify = false;
                 Css = table.HtmlExporter.GetCssString();
                 Html = table.HtmlExporter.GetHtmlString();
                 WorkbookBytes = package.GetAsByteArray();
+            }
+        }
+
+        private static void SetTheme(int theme, ExcelPackage package)
+        {
+            if (theme > 0)
+            {
+                var fileInfo = default(FileInfo);
+                switch (theme)
+                {
+                    case 1:
+                        fileInfo = new FileInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"themes\\Ion.thmx"));
+                        break;
+                    case 2:
+                        fileInfo = new FileInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"themes\\Banded.thmx"));
+                        break;
+                    case 3:
+                        fileInfo = new FileInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"themes\\Parallax.thmx"));
+                        break;
+                    default:
+                        fileInfo = new FileInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"themes\\Ion.thmx"));
+                        break;
+                }
+                package.Workbook.ThemeManager.Load(fileInfo);
             }
         }
 
