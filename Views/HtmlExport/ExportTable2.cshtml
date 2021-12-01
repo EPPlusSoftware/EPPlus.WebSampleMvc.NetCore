@@ -276,7 +276,7 @@ namespace EPPlus.WebSampleMvc.NetCore.Models.HtmlExport
         var n = 0;
 
         // read data types from the thead and define columns in the google.visualization.DataTable
-        $(".epplus-table thead tr th").each(function (i, elem) {
+        $("table#population-table thead tr th").each(function (i, elem) {
             if (indexes.includes(i)) {
                 var dt = $(elem).data("datatype");
                 dataTypes[n++] = dt;
@@ -286,7 +286,7 @@ namespace EPPlus.WebSampleMvc.NetCore.Models.HtmlExport
 
         // read the data from the tbody and insert it into the table
         let rows = [];
-        $(".epplus-table tbody tr").each(function (i, tableRow) {
+        $("table#population-table tbody tr").each(function (i, tableRow) {
             var row = [];
             var colIx = 0;
             indexes.forEach(ix => {
@@ -366,7 +366,8 @@ namespace EPPlus.WebSampleMvc.NetCore.Models.HtmlExport
         //let html = new DOMParser().parseFromString(jQuery("#table-container").innerHTML, "text/html").documentElement.textContent;
         //jQuery("#html-code").html(html);
         hljs.highlightAll();
-        jQuery("#tab-csharp").click(function () {
+        jQuery("#tab-csharp").click(function (e) {
+            e.preventDefault();
             jQuery(".demo").hide();
             jQuery(".csharp").show();
             jQuery(".js").hide();
@@ -376,7 +377,8 @@ namespace EPPlus.WebSampleMvc.NetCore.Models.HtmlExport
             jQuery("#tab-js").removeClass("active");
             jQuery("#tab-html").removeClass("active");
         });
-        jQuery("#tab-demo").click(function () {
+        jQuery("#tab-demo").click(function (e) {
+            e.preventDefault();
             jQuery(".demo").show();
             jQuery(".csharp").hide();
             jQuery(".js").hide();
@@ -386,7 +388,8 @@ namespace EPPlus.WebSampleMvc.NetCore.Models.HtmlExport
             jQuery("#tab-js").removeClass("active");
             jQuery("#tab-html").removeClass("active");
         });
-        jQuery("#tab-js").click(function () {
+        jQuery("#tab-js").click(function (e) {
+            e.preventDefault();
             jQuery(".demo").hide();
             jQuery(".csharp").hide();
             jQuery(".js").show();
@@ -396,7 +399,8 @@ namespace EPPlus.WebSampleMvc.NetCore.Models.HtmlExport
             jQuery("#tab-js").addClass("active");
             jQuery("#tab-html").removeClass("active");
         });
-        jQuery("#tab-html").click(function () {
+        jQuery("#tab-html").click(function (e) {
+            e.preventDefault();
             jQuery(".demo").hide();
             jQuery(".csharp").hide();
             jQuery(".js").hide();
