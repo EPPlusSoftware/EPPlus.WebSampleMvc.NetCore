@@ -115,14 +115,14 @@
             </div>
             <div class="col-sm-12 col-md-6 p-3">
                 <div class="bg-light rounded p-2" style="height:100%">
-                    <p>The checkboxes below demonstrates that you can use the css from EPPlus with css/javascript from other frameworks</p>
+                    <p>The checkboxes below demonstrates that you can use the html/css from EPPlus with css/javascript from other frameworks</p>
                     <div class="form-check">
                         @Html.CheckBoxFor(x => x.AddBootstrapClasses, new { @class = "form-control-check", id = "chkAddBootstrapClasses" })
-                        <label class="form-check-label">Add Bootstrap 4 table classes</label>
+                        <label class="form-check-label">Add <a href="https://getbootstrap.com/docs/4.1/content/tables/">Bootstrap 4 table classes</a></label>
                     </div>
                     <div class="form-check">
                         @Html.CheckBoxFor(x => x.AddDataTablesJs, new { @class = "form-control-check", id = "chkAddDataTablesJs" })
-                        <label class="form-check-label">Add DataTables.js</label>
+                        <label class="form-check-label">Add <a href="https://datatables.net/" target="_blank">DataTables</a></label>
                     </div>
                 </div>
             </div>
@@ -325,6 +325,7 @@ private static void SetTheme(int theme, ExcelPackage package)
         updateTableClassInfo();
 
         jQuery("#btn-get-workbook").click(function (e) {
+            e.preventDefault();
             jQuery("#get-workbook").val(true);
             jQuery("#form1").submit();
 
@@ -344,7 +345,8 @@ private static void SetTheme(int theme, ExcelPackage package)
         //let html = new DOMParser().parseFromString(jQuery("#table-container").innerHTML, "text/html").documentElement.textContent;
         //jQuery("#html-code").html(html);
         hljs.highlightAll();
-        jQuery("#tab-css").click(function () {
+        jQuery("#tab-css").click(function (e) {
+            e.preventDefault();
             jQuery(".demo").hide();
             jQuery(".css").show();
             jQuery(".html").hide();
@@ -354,7 +356,8 @@ private static void SetTheme(int theme, ExcelPackage package)
             jQuery("#tab-html").removeClass("active");
             jQuery("#tab-csharp").removeClass("active");
         });
-        jQuery("#tab-demo").click(function () {
+        jQuery("#tab-demo").click(function (e) {
+            e.preventDefault();
             jQuery(".demo").show();
             jQuery(".csharp").hide();
             jQuery(".html").hide();
@@ -364,7 +367,8 @@ private static void SetTheme(int theme, ExcelPackage package)
             jQuery("#tab-html").removeClass("active");
             jQuery("#tab-csharp").removeClass("active");
         });
-        jQuery("#tab-html").click(function () {
+        jQuery("#tab-html").click(function (e) {
+            e.preventDefault();
             jQuery(".demo").hide();
             jQuery(".html").show();
             jQuery(".css").hide();
@@ -374,7 +378,8 @@ private static void SetTheme(int theme, ExcelPackage package)
             jQuery("#tab-css").removeClass("active");
             jQuery("#tab-csharp").removeClass("active");
         });
-        jQuery("#tab-csharp").click(function () {
+        jQuery("#tab-csharp").click(function (e) {
+            e.preventDefault();
             jQuery(".demo").hide();
             jQuery(".html").hide();
             jQuery(".css").hide();

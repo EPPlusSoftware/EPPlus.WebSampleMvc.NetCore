@@ -40,6 +40,21 @@
     </div>
 </div>
 <div class="row">
+    <div class="col my-3">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" href="#" id="tab-demo">Demo</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" id="tab-csharp">C#</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" id="tab-js">Javascript</a>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="row demo">
     <div class="col">
         <div id="currency-chart" class="text-center border border-secondary p-3 mb-4 rounded shadow" style="height:450px">
             <div class="spinner-border" role="status">
@@ -48,12 +63,77 @@
         </div>
     </div>
 </div>
-<div class="row">
+<div class="row demo">
     <div class="col">
         @Html.Raw(Model.Html)
     </div>
 </div>
-<script type="text/javascript">
+<div class="row js">
+    <div class="col">
+        <pre>
+        <code class="language-js hljs" id="js-code"></code>
+        </pre>
+    </div>
+</div>
+<div class="row csharp">
+    <div class="col">
+        <pre>
+        <code class="language-csharp hljs">
+using OfficeOpenXml;
+using OfficeOpenXml.Style;
+using OfficeOpenXml.Table;
+using System;
+using System.Globalization;
+using System.IO;
+
+namespace EPPlus.WebSampleMvc.NetCore.Models.HtmlExport
+{
+    public class ExportTable3Model
+    {
+        public void SetupSampleData(TableStyles style = TableStyles.Dark1)
+        {
+            using (var package = new ExcelPackage())
+            {
+                var sheet = package.Workbook.Worksheets.Add("Html export sample 3");
+                var csvFileInfo = new FileInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"data\\currencies2011weekly.csv"));
+                var format = new ExcelTextFormat
+                {
+                    Delimiter = ';',
+                    Culture = CultureInfo.InvariantCulture,
+                    DataTypes = new eDataTypes[] { eDataTypes.DateTime, eDataTypes.Number, eDataTypes.Number, eDataTypes.Number }
+                };
+                var tableRange = sheet.Cells["A1"].LoadFromText(csvFileInfo, format, style, true);
+
+                sheet.Cells["B1:E1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                sheet.Cells[tableRange.Start.Row, 1, tableRange.End.Row, 1].Style.Numberformat.Format = "yyyy-MM-dd";
+                sheet.Cells[tableRange.Start.Row, 2, tableRange.End.Row, 5].Style.Numberformat.Format = "#,##0.0000";
+
+                var table = sheet.Tables.GetFromRange(tableRange);
+                table.ShowFirstColumn = true;
+
+                var settings = table.HtmlExporter.Settings;
+                settings.Culture = CultureInfo.InvariantCulture;
+                settings.TableId = "currency-table";
+                settings.AdditionalTableClassNames.Add("table");
+                settings.AdditionalTableClassNames.Add("table-sm");
+                settings.AdditionalTableClassNames.Add("table-borderless");
+
+                // export css and html
+                Css = table.HtmlExporter.GetCssString();
+                Html = table.HtmlExporter.GetHtmlString();
+            }
+        }
+
+        public string Css { get; set; }
+
+        public string Html { get; set; }
+    }
+}
+            </code>
+        </pre>
+    </div>
+</div>
+<script type="text/javascript" id="chart-script">
 
     // Load the Visualization API and the corechart package.
     google.charts.load('current', { 'packages': ['corechart'] });
@@ -82,7 +162,7 @@
         var dataTypes = [];
 
         // read data types from the thead and define columns in the google.visualization.DataTable
-        var headers = document.querySelectorAll("table.epplus-table thead tr th");
+        var headers = document.querySelectorAll("table#currency-table thead tr th");
         for (var hIx = 0; hIx < headers.length; hIx++) {
             let hCell = headers[hIx];
             if (indexes.indexOf(hIx) > -1) {
@@ -94,7 +174,7 @@
 
         // read the data from the tbody and insert it into the table
         let rows = [];
-        var tableRows = document.querySelectorAll("table.epplus-table tbody tr");
+        var tableRows = document.querySelectorAll("table#currency-table tbody tr");
         for (var rIx = 0; rIx < tableRows.length; rIx++) {
             var row = [];
             let tableRow = tableRows[rIx];
@@ -133,12 +213,44 @@
         // Instantiate and draw our chart, passing in some options.
         var chart = new google.visualization.LineChart(document.getElementById('currency-chart'));
         chart.draw(data, options);
-    }
-
+    };
+</script>
+<script type="text/javascript">
     document.addEventListener("DOMContentLoaded", function () {
-        let table = document.getElementsByClassName("epplus-table")[0];
-        table.classList.add("table");
-        table.classList.add("table-sm");
-        table.classList.add("table-borderless");
+        jQuery(".csharp").hide();
+        jQuery(".js").hide();
+        jQuery("#js-code").html(jQuery("#chart-script").html());
+        //let html = new DOMParser().parseFromString(jQuery("#table-container").innerHTML, "text/html").documentElement.textContent;
+        //jQuery("#html-code").html(html);
+        hljs.highlightAll();
+        jQuery("#tab-csharp").click(function (e) {
+            e.preventDefault();
+            jQuery(".demo").hide();
+            jQuery(".csharp").show();
+            jQuery(".js").hide();
+            jQuery("#tab-demo").removeClass("active");
+            jQuery("#tab-csharp").addClass("active");
+            jQuery("#tab-js").removeClass("active");
+        });
+        jQuery("#tab-demo").click(function (e) {
+            e.preventDefault();
+            jQuery(".demo").show();
+            jQuery(".csharp").hide();
+            jQuery(".js").hide();
+            jQuery(".html").hide();
+            jQuery("#tab-demo").addClass("active");
+            jQuery("#tab-csharp").removeClass("active");
+            jQuery("#tab-js").removeClass("active");
+            jQuery("#tab-html").removeClass("active");
+        });
+        jQuery("#tab-js").click(function (e) {
+            e.preventDefault();
+            jQuery(".demo").hide();
+            jQuery(".csharp").hide();
+            jQuery(".js").show();
+            jQuery("#tab-demo").removeClass("active");
+            jQuery("#tab-csharp").removeClass("active");
+            jQuery("#tab-js").addClass("active");
+        });
     });
 </script>

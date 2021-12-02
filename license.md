@@ -15,6 +15,9 @@ Terms of Service: https://developers.google.com/chart/terms
 ## Chart.js
 Chart.js is distributed under the MIT license, see https://github.com/chartjs/Chart.js/blob/master/LICENSE.md
 
+## DataTables
+DataTables is distributed under the MIT license, see https://github.com/DataTables/DataTables/blob/master/license.txt
+
 ## Source code of the EPPlus.WebSampleMvc project
 The source code of the web application is distributed under the MIT license, see license terms below.
 

@@ -35,6 +35,7 @@ namespace EPPlus.WebSampleMvc.NetCore.Models.HtmlExport
                 settings.TableId = "currency-table";
                 settings.AdditionalTableClassNames.Add("table");
                 settings.AdditionalTableClassNames.Add("table-sm");
+                settings.AdditionalTableClassNames.Add("table-borderless");
 
                 // export css and html
                 Css = table.HtmlExporter.GetCssString();
